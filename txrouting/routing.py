@@ -55,11 +55,11 @@ class RouteManager(object):
     def execute_route(self, controller, request):
 
         try:
-            handler = self._load_route_handler(request)
+            handler, kwargs = self._load_route_handler(request)
         except NotFound:
             return "NotFound"
 
-        return handler(controller, request)
+        return handler(controller, request, **kwargs)
 
     def _load_route_handler(self, request):
 
@@ -69,10 +69,8 @@ class RouteManager(object):
         if match is None or match.get('handler') is None:
             raise NotFound
 
-        print match
-        print match.values()
         handler = match.pop('handler')
-        return handler
+        return handler, match
 
      # decorator
     def route(self, url, method='GET'):
