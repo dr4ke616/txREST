@@ -1,0 +1,94 @@
+# -*- test-case-name: <INSERT_TEST_MODULE> -*-
+# Copyright (c) 2014 Adam Drakeford <adam.drakeford@gmail.com>
+# See LICENSE for more details
+
+"""
+.. module:: controller
+    :platform: Linux
+    :synopsis: Simple routing system.
+
+.. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
+"""
+
+import inspect
+import functools
+
+from routes import Mapper
+
+
+class NotFound(Exception):
+    pass
+
+
+class Route(object):
+
+    def __init__(self, url, method, callback):
+        self.url = url
+        self.method = method
+        self.callback = callback
+
+
+class RouteManager(object):
+
+    def __init__(self):
+        super(RouteManager, self).__init__()
+        self._mapping = Mapper()
+
+    def install_controller(self, controller):
+
+        for func in inspect.getmembers(controller, predicate=inspect.ismethod):
+            if hasattr(func[1], 'route'):
+                route = getattr(func[1], 'route')
+
+                if type(route.method) in (tuple, list):
+                    conditions = {'method': [m for m in route.method]}
+                else:
+                    conditions = {'method': [route.method]}
+
+                self._mapping.connect(
+                    None,
+                    route.url,
+                    handler=route.callback,
+                    conditions=conditions
+                )
+
+    def execute_route(self, controller, request):
+
+        try:
+            handler = self._load_route_handler(request)
+        except NotFound:
+            return "NotFound"
+
+        return handler(controller, request)
+
+    def _load_route_handler(self, request):
+
+        env = {'REQUEST_METHOD': request.method, 'PATH_INFO': request.path}
+        match = self._mapping.match(environ=env)
+
+        if match is None or match.get('handler') is None:
+            raise NotFound
+
+        print match
+        print match.values()
+        handler = match.pop('handler')
+        return handler
+
+     # decorator
+    def route(self, url, method='GET'):
+        """Register routes for controllers or full REST resources.
+        """
+
+        def decorator(func):
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                return func
+
+            setattr(wrapper, 'route', Route(url, method, func))
+
+            return wrapper
+
+        return decorator
+
+
+
