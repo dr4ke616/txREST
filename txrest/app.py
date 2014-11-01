@@ -69,4 +69,4 @@ def initialize(start_server=False, port=8080):
     if start_server:
         return start_webserver(app, port)
 
-    return retval
+    return app
