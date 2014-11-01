@@ -12,10 +12,10 @@
 """
 
 import inspect
+from collections import OrderedDict
 
 from txrest.app import txREST
 
-from collections import OrderedDict
 from twisted.web import server, resource
 from twisted.application import service, internet
 
