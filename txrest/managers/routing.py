@@ -10,10 +10,9 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
+import routes
 import inspect
 import functools
-
-from routes import Mapper
 
 
 class NotFound(Exception):
@@ -32,9 +31,9 @@ class RouteManager(object):
 
     def __init__(self):
         super(RouteManager, self).__init__()
-        self._mapping = Mapper()
+        self._mapping = routes.Mapper()
 
-    def install_controller(self, controller):
+    def install_routes(self, controller):
 
         for func in inspect.getmembers(controller, predicate=inspect.ismethod):
             if hasattr(func[1], 'route'):

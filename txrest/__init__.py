@@ -10,7 +10,7 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
-from routing import RouteManager
+from txrest.managers.routing import RouteManager
 
 
 route = RouteManager().route

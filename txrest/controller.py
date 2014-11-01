@@ -13,27 +13,36 @@
 
 import inspect
 
-from routing import RouteManager
+from txrest.app import txREST
 
+from collections import OrderedDict
 from twisted.web import server, resource
 from twisted.application import service, internet
 
 
 class BaseController(resource.Resource):
 
-    _routing = RouteManager()
+    __route__ = '/'
+    __parent__ = None
+
+    _app = txREST()
+
+    children = OrderedDict()
 
     def __init__(self):
         resource.Resource.__init__(self)
-        self._routing.install_controller(self)
+
+        self._routing = self._app.managers.get('routes')
+        self._controllers = self._app.managers.get('controllers')
+
+        self._routing.install_routes(self)
+        self._controllers.install_controller(self)
 
     def getChild(self, name, request):
 
         return self
 
     def render(self, request):
-
-        env = {'REQUEST_METHOD': request.method, 'PATH_INFO': request.path}
 
         result = self._routing.execute_route(self, request)
         request.write(result)
