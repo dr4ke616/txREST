@@ -26,7 +26,7 @@ class ControlManager(object):
     def install_controller(self, controller):
 
         self._controllers.update({
-            controller.__route__: controller
+            controller.get_path(): controller
         })
 
     def get_controllers(self):
@@ -39,12 +39,19 @@ class ControlManager(object):
             klass = self._controllers.itervalues().next()
             return klass.__class__.__bases__[0]()
 
-    def build_controller_tree(self, controller):
+    def get_full_route(self, controller):
 
-        if controller.__parent__ is not None:
-            parent = self._controllers.get(controller.__parent__)
-            if parent is not None:
-                parent.children[controller.__route__] = controller
+        routes = [controller.get_path()]
 
-    def get_full_route(self):
-        pass
+        while True:
+            if controller is not None and controller.__parent__ is not None:
+                parent = self._controllers.get(controller.__parent__)
+                if parent is not None:
+                    routes.append(parent.get_path())
+                controller = parent
+            else:
+                break
+
+        routes.reverse()
+        return '/{}'.format('/'.join(routes))
+

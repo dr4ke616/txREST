@@ -44,9 +44,9 @@ class RouteManager(object):
                 else:
                     conditions = {'method': [route.method]}
 
+                url = '{}{}'.format(controller.full_url, route.url)
                 self._mapping.connect(
-                    None,
-                    route.url,
+                    None, url,
                     handler=route.callback,
                     conditions=conditions
                 )

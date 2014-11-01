@@ -22,13 +22,25 @@ class ParentController(controller.BaseController):
     @route('/', method='GET')
     def test(self, request, **kwargs):
 
-        return 'Hello World'
+        return 'I am the parent'
+
+
+class ChildController(controller.BaseController):
+
+    __route__ = 'v1'
+    __parent__ = 'api'
+
+    @route('/', method='GET')
+    def test(self, request, **kwargs):
+
+        return 'I am the child'
 
 
 # Run with
-# twistd --nodaemon --python txrest/run-server.tac
+# twistd --nodaemon --python txrest/sample-server.tac
 
 ParentController()
+ChildController()
 
 txrest_service = app.initialize(start_server=True)
 application = service.Application('txREST App')

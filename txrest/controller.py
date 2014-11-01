@@ -22,12 +22,9 @@ from twisted.application import service, internet
 
 class BaseController(resource.Resource):
 
-    __route__ = '/'
     __parent__ = None
 
     _app = txREST()
-
-    children = OrderedDict()
 
     def __init__(self):
         resource.Resource.__init__(self)
@@ -35,12 +32,18 @@ class BaseController(resource.Resource):
         self._routing = self._app.managers.get('routes')
         self._controllers = self._app.managers.get('controllers')
 
-        self._routing.install_routes(self)
         self._controllers.install_controller(self)
 
     def getChild(self, name, request):
 
         return self
+
+    def get_path(self):
+
+        try:
+            return self.__route__
+        except AttributeError:
+            return ''
 
     def render(self, request):
 
@@ -49,6 +52,11 @@ class BaseController(resource.Resource):
         request.finish()
 
         return server.NOT_DONE_YET
+
+    @property
+    def full_url(self):
+
+        return self._controllers.get_full_route(self)
 
     def run(self, port=8080):
 

@@ -32,6 +32,14 @@ class txREST(Borg):
 
         self._initialized = True
 
+    def install_routes(self):
+
+        route_manager = self.managers.get('routes')
+        controller_manager = self.managers.get('controllers')
+
+        for controller in controller_manager.get_controllers():
+            route_manager.install_routes(controller)
+
 
 def start_webserver(app, port=80):
 
@@ -56,12 +64,9 @@ def start_webserver(app, port=80):
 def initialize(start_server=False, port=8080):
 
     app = txREST()
-
-    manager = app.managers.get('controllers')
-    for controller in manager.get_controllers():
-        manager.build_controller_tree(controller)
+    app.install_routes()
 
     if start_server:
         return start_webserver(app, port)
 
-    return app
+    return retval
