@@ -1,4 +1,4 @@
-# -*- test-case-name: <INSERT_TEST_MODULE> -*-
+# -*- test-case-name: txrest.tests.test_controller.ControllerManagerTest -*-
 # Copyright (c) 2014 Adam Drakeford <adam.drakeford@gmail.com>
 # See LICENSE for more details
 

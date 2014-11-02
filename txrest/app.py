@@ -55,12 +55,15 @@ class txREST(Borg):
                     loaded_objects[controller.__name__] = controller()
 
 
-def start_webserver(port=80):
+def start_webserver(port=80, service=None):
 
     app = txREST()
 
-    txrest_service = service.MultiService()
-    txrest_service.setName('txREST')
+    if service is None:
+        txrest_service = service.MultiService()
+        txrest_service.setName('txREST')
+    else:
+        txrest_service = service
 
     manager = app.managers.get('controllers')
     controller = manager.get_root_controller()
