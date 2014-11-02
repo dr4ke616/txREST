@@ -5,8 +5,6 @@
 Helper mock classes goes here
 """
 
-from txrest import route
-
 
 class MockBaseController(object):
 

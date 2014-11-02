@@ -1,11 +1,11 @@
-# -*- test-case-name: <INSERT_TEST_MODULE> -*-
+# -*- test-case-name: txrest.tests.test_routes.RoutesTest -*-
 # Copyright (c) 2014 Adam Drakeford <adam.drakeford@gmail.com>
 # See LICENSE for more details
 
 """
 .. module:: controller
     :platform: Linux
-    :synopsis: Simple routing system.
+    :synopsis: The routing manger for the controllers.
 
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
@@ -35,7 +35,8 @@ class RouteManager(object):
 
     def install_routes(self, controller):
 
-        for func in inspect.getmembers(controller, predicate=inspect.ismethod):
+        for func in inspect.getmembers(
+                controller, predicate=inspect.ismethod):
             if hasattr(func[1], 'route'):
                 route = getattr(func[1], 'route')
 
@@ -86,6 +87,3 @@ class RouteManager(object):
             return wrapper
 
         return decorator
-
-
-

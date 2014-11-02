@@ -8,7 +8,7 @@ Tests for txREST controllers
 from twisted.web import resource
 from twisted.trial import unittest
 
-from txrest import controller, app, route
+from txrest import controller
 from txrest.managers.controllers import ControlManager
 
 from txrest.tests.helpers import (
@@ -26,7 +26,9 @@ class ControllerTest(unittest.TestCase):
         self.c = controller.BaseController()
 
     def test_class_inherits_twisted_web_resource(self):
-        self.assertTrue(issubclass(controller.BaseController, resource.Resource))
+        self.assertTrue(
+            issubclass(controller.BaseController, resource.Resource)
+        )
 
     def test_parent_is_none_by_default(self):
         self.assertIsNone(self.c.__parent__)
@@ -141,12 +143,3 @@ class ControllerManagerTest(unittest.TestCase):
 
         path = self.mgr.get_full_route(sub2)
         self.assertEqual(path, '/api/v2/test2')
-
-
-
-
-
-
-
-
-

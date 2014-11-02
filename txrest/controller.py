@@ -11,13 +11,11 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
-import inspect
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 
 from txrest.app import txREST
 
 from twisted.web import server, resource
-from twisted.application import service, internet
 
 
 class ChildControllerManager(type):
@@ -39,9 +37,9 @@ class NewStyleClass(object):
         a New-Type so we inherit from this class in our BaseController.
 
         In the future if this causes wierd behaviour we need to revisit this.
-        To get around any possible problems dont inherit from this class, remove
-        the `load_controllers` method call in the txREST object and instanciate
-        each contoller manually
+        To get around any possible problems dont inherit from this class,
+        remove the `load_controllers` method call in the txREST object and
+        instanciate each contoller manually
     """
     pass
 

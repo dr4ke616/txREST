@@ -7,11 +7,9 @@ Tests for txREST controllers
 
 import routes
 
-from twisted.web import resource
 from twisted.trial import unittest
 
-from txrest import controller, app, route
-from txrest.managers.controllers import ControlManager
+from txrest import route
 from txrest.managers.routing import RouteManager, NotFound
 from txrest.tests.helpers import MockController, MockRequest
 
@@ -54,7 +52,10 @@ class RoutesTest(unittest.TestCase):
         self.assertTrue(hasattr(match['handler'], '__call__'))
         self.assertEqual(match['handler'].__name__, 'test_one')
 
-        env = {'REQUEST_METHOD': 'POST', 'PATH_INFO': '/v1/api/some/url/endpoint1'}
+        env = {
+            'REQUEST_METHOD': 'POST',
+            'PATH_INFO': '/v1/api/some/url/endpoint1'
+        }
         match = self.r._mapping.match(environ=env)
         self.assertIsInstance(match, dict)
         self.assertTrue(hasattr(match['handler'], '__call__'))

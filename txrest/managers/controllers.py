@@ -5,7 +5,7 @@
 """
 .. module:: controller
     :platform: Linux
-    :synopsis: The main routing manager for all the controllers.
+    :synopsis: The main manager for all the controllers.
 
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
@@ -54,4 +54,3 @@ class ControlManager(object):
 
         routes.reverse()
         return '/{}'.format('/'.join(routes))
-

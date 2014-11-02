@@ -10,12 +10,9 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
-import sys
-import inspect
-
 from twisted.web import server
 from twisted.python import log
-from twisted.application import service, internet
+from twisted.application import internet
 
 from txrest.utils.borg import Borg
 from txrest.managers import controllers, routing
