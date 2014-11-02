@@ -52,7 +52,7 @@ class txREST(Borg):
                     loaded_objects[controller.__name__] = controller()
 
 
-def start_webserver(port=80, svc=None):
+def start_webserver(port=80, svc=None, name=None):
 
     app = txREST()
 
@@ -60,7 +60,7 @@ def start_webserver(port=80, svc=None):
         txrest_service = service.MultiService()
         txrest_service.setName('txREST')
     else:
-        txrest_service = service
+        txrest_service = svc
 
     manager = app.managers.get('controllers')
     controller = manager.get_root_controller()
@@ -71,7 +71,7 @@ def start_webserver(port=80, svc=None):
     site = server.Site(controller)
 
     httpserver = internet.TCPServer(int(port), site)
-    httpserver.setName('txREST Internal Server')
+    httpserver.setName('txREST Internal Server' if name is None else name)
     httpserver.setServiceParent(txrest_service)
 
     return txrest_service
