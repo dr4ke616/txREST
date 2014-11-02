@@ -10,6 +10,9 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
+import sys
+import inspect
+
 from twisted.web import server
 from twisted.python import log
 from twisted.application import service, internet
@@ -40,8 +43,21 @@ class txREST(Borg):
         for controller in controller_manager.get_controllers():
             route_manager.install_routes(controller)
 
+    def load_controllers(self):
 
-def start_webserver(app, port=80):
+        from txrest.controller import BaseController
+
+        loaded_objects = {}
+        inheritors = BaseController.__inheritors__.values()
+        if len(inheritors) > 0:
+            for controller in inheritors[0]:
+                if controller.__name__ not in loaded_objects:
+                    loaded_objects[controller.__name__] = controller()
+
+
+def start_webserver(port=80):
+
+    app = txREST()
 
     txrest_service = service.MultiService()
     txrest_service.setName('txREST')
@@ -61,12 +77,9 @@ def start_webserver(app, port=80):
     return txrest_service
 
 
-def initialize(start_server=False, port=8080):
+def initialize():
 
     app = txREST()
+    app.load_controllers()
     app.install_routes()
-
-    if start_server:
-        return start_webserver(app, port)
-
     return app

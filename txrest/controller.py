@@ -12,7 +12,7 @@
 """
 
 import inspect
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from txrest.app import txREST
 
@@ -20,9 +20,36 @@ from twisted.web import server, resource
 from twisted.application import service, internet
 
 
-class BaseController(resource.Resource):
+class ChildControllerManager(type):
+
+    __inheritors__ = defaultdict(list)
+
+    def __new__(meta, name, bases, dct):
+        klass = type.__new__(meta, name, bases, dct)
+        for base in klass.mro()[1:-1]:
+            if base.__name__ == 'BaseController':
+                meta.__inheritors__[base].append(klass)
+        return klass
+
+
+class NewStyleClass(object):
+    """ In order to be able to automatically instanciate the controller
+        objects using the ChildControllerManager meta_class the BaseController
+        needs to be a New-Type class. Twisted's resource.Resource class is not
+        a New-Type so we inherit from this class in our BaseController.
+
+        In the future if this causes wierd behaviour we need to revisit this.
+        To get around any possible problems dont inherit from this class, remove
+        the `load_controllers` method call in the txREST object and instanciate
+        each contoller manually
+    """
+    pass
+
+
+class BaseController(NewStyleClass, resource.Resource):
 
     __parent__ = None
+    __metaclass__ = ChildControllerManager
 
     _app = txREST()
 

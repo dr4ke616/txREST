@@ -14,7 +14,6 @@ from twisted.application import service
 
 from txrest import controller, route, app
 
-
 class ParentController(controller.BaseController):
 
     __route__ = 'api'
@@ -30,19 +29,17 @@ class ChildController(controller.BaseController):
     __route__ = 'v1'
     __parent__ = 'api'
 
-    @route('/', method='GET')
+    @route('/my/{name}', method='GET')
     def test(self, request, **kwargs):
 
-        return 'I am the child'
+        return 'Hello {}, I am the child'.format(kwargs['name'])
 
 
 # Run with
 # twistd --nodaemon --python txrest/sample-server.tac
 
-ParentController()
-ChildController()
+app.initialize()
 
-txrest_service = app.initialize(start_server=True)
+txrest_service = app.start_webserver(port=8080)
 application = service.Application('txREST App')
 txrest_service.setServiceParent(application)
-

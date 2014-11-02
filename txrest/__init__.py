@@ -12,5 +12,4 @@
 
 from txrest.managers.routing import RouteManager
 
-
 route = RouteManager().route
