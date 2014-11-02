@@ -12,7 +12,7 @@
 
 from twisted.web import server
 from twisted.python import log
-from twisted.application import internet
+from twisted.application import internet, service
 
 from txrest.utils.borg import Borg
 from txrest.managers import controllers, routing
@@ -52,11 +52,11 @@ class txREST(Borg):
                     loaded_objects[controller.__name__] = controller()
 
 
-def start_webserver(port=80, service=None):
+def start_webserver(port=80, svc=None):
 
     app = txREST()
 
-    if service is None:
+    if svc is None:
         txrest_service = service.MultiService()
         txrest_service.setName('txREST')
     else:

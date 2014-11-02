@@ -71,12 +71,13 @@ class BaseController(NewStyleClass, resource.Resource):
             return ''
 
     def render(self, request):
-
         result = self._routing.execute_route(self, request)
+        result.addCallback(self.send_back_to_browser, request)
+        return server.NOT_DONE_YET
+
+    def send_back_to_browser(self, result, request):
         request.write(result)
         request.finish()
-
-        return server.NOT_DONE_YET
 
     @property
     def full_url(self):

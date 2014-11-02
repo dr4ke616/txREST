@@ -14,6 +14,9 @@ import routes
 import inspect
 import functools
 
+from twisted.python import log
+from twisted.internet import defer
+
 
 class NotFound(Exception):
     pass
@@ -56,10 +59,29 @@ class RouteManager(object):
 
         try:
             handler, kwargs = self._load_route_handler(request)
-        except NotFound:
-            return "NotFound"
 
-        return handler(controller, request, **kwargs)
+            if hasattr(handler, '__call__'):
+                d = defer.maybeDeferred(handler, controller, request, **kwargs)
+                d.addCallback(self._process_result, request)
+                d.addErrback(self._process_error, request)
+            elif handler == 'NotFound':
+                d = defer.succeed('NotFound')
+            else:
+                d = defer.succeed('BadRequest')
+
+        except Exception as error:
+            log.err(error)
+            d = defer.succeed('Internal server error')
+
+        return d
+
+    def _process_result(self, result, request):
+
+        return result
+
+    def _process_error(self, error, request):
+
+        print error
 
     def _load_route_handler(self, request):
 
@@ -67,7 +89,7 @@ class RouteManager(object):
         match = self._mapping.match(environ=env)
 
         if match is None or match.get('handler') is None:
-            raise NotFound
+            return 'NotFound', None
 
         handler = match.pop('handler')
         return handler, match

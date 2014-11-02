@@ -8,6 +8,7 @@ Tests for txREST controllers
 import routes
 
 from twisted.trial import unittest
+from twisted.internet import defer
 
 from txrest import route
 from txrest.managers.routing import RouteManager, NotFound
@@ -90,6 +91,7 @@ class RoutesTest(unittest.TestCase):
         self.assertTrue(func, '__call__')
         self.assertEqual(func.__name__, 'test_three')
 
+    @defer.inlineCallbacks
     def test_execute_route(self):
         c = self.install_route()
 
@@ -97,9 +99,10 @@ class RoutesTest(unittest.TestCase):
         req.method = 'GET'
         req.path = '/v1/api/some/url/'
 
-        retval = self.r.execute_route(c, req)
+        retval = yield self.r.execute_route(c, req)
         self.assertEqual(retval, 'I am root')
 
+    @defer.inlineCallbacks
     def test_execute_route_with_args(self):
         c = self.install_route()
 
@@ -107,9 +110,10 @@ class RoutesTest(unittest.TestCase):
         req.method = 'GET'
         req.path = '/v1/api/some/url/endpoint2/test_arg'
 
-        retval = self.r.execute_route(c, req)
+        retval = yield self.r.execute_route(c, req)
         self.assertEqual(retval, 'I am endpoint2 with test_arg')
 
+    @defer.inlineCallbacks
     def test_execute_route_not_found(self):
         c = self.install_route()
 
@@ -117,7 +121,7 @@ class RoutesTest(unittest.TestCase):
         req.method = 'GET'
         req.path = '/v1/api'
 
-        retval = self.r.execute_route(c, req)
+        retval = yield self.r.execute_route(c, req)
         self.assertEqual(retval, 'NotFound')
 
     def test_not_found_route_on_method(self):
@@ -127,7 +131,8 @@ class RoutesTest(unittest.TestCase):
         req.method = 'PATCH'
         req.path = '/v1/api/some/url/'
 
-        self.assertRaises(NotFound, self.r._load_route_handler, req)
+        retval = self.r._load_route_handler(req)
+        self.assertEqual(retval[0], 'NotFound')
 
     def test_not_found_route_on_url(self):
         self.install_route()
@@ -136,7 +141,8 @@ class RoutesTest(unittest.TestCase):
         req.method = 'GET'
         req.path = '/v1/api/some/url/doesnt/exist'
 
-        self.assertRaises(NotFound, self.r._load_route_handler, req)
+        retval = self.r._load_route_handler(req)
+        self.assertEqual(retval[0], 'NotFound')
 
     def test_not_found_route_on_both(self):
         self.install_route()
@@ -145,4 +151,5 @@ class RoutesTest(unittest.TestCase):
         req.method = 'DELETE'
         req.path = '/v1/api/some/url/doesnt/exist'
 
-        self.assertRaises(NotFound, self.r._load_route_handler, req)
+        retval = self.r._load_route_handler(req)
+        self.assertEqual(retval[0], 'NotFound')

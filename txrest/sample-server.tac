@@ -10,6 +10,7 @@
 .. moduleauthor:: Adam Drakeford <adam.drakeford@gmail.com>
 """
 
+from twisted.internet import defer
 from twisted.application import service
 
 from txrest import controller, route, app
@@ -34,6 +35,12 @@ class ChildController(controller.BaseController):
     def test(self, request, **kwargs):
 
         return 'Hello {}, I am the child'.format(kwargs['name'])
+
+    @route('/defer', method='GET')
+    def test_defer(self, request, **kwargs):
+
+        d = defer.succeed('I am the defered child')
+        return d
 
 
 # Run with
