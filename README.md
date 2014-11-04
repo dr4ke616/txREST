@@ -1,6 +1,6 @@
 # txREST
 
-Inspired by the routing system of [Mamba](http://www.pymamba.com/) and the simplicity of [Flask](http://flask.pocoo.org/) txREST is a fully REST compliant asynchronous micro framework using [Twisted](http://twistedmatrix.com).
+Inspired by the routing system of [Mamba](http://www.pymamba.com/) and the simplicity of [Flask](http://flask.pocoo.org/) ```txREST``` is a fully REST compliant asynchronous micro framework using [Twisted](http://twistedmatrix.com).
 Note: This project is stil under development.
 
 <!-- ## Installation
@@ -26,7 +26,7 @@ class ParentController(controller.BaseController):
         return 'I am the parent'
 ```
 
-You can also use the routing system to create sub-urls. Making versioning of APIs very easy. For example: http://host/api/v1/defer can be easily updated to http://host/api/v2/endpoint.
+You can also use the routing system to create sub-urls. Making versioning of APIs very easy. For example: ```http://host/api/v1/defer``` can be easily updated to ```http://host/api/v2/endpoint```.
 
 ```python
 from txrest import controller, route
@@ -60,7 +60,7 @@ class ChildControllerVersionTwo(controller.BaseController):
 
 As you can see, defers can also be handled.
 
-You can use Twisted's built in webserver to start the application, or just import your controller classes to any other Twisted project. You need to initialize txREST somewhere in your project or in a Twisted tac file.
+You can use Twisted's built in webserver to start the application, or just import your controller classes to any other Twisted project. You need to initialize ```txREST``` somewhere in your project or in a Twisted tac file.
 
 ```python
 from txrest import app
