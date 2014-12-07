@@ -14,9 +14,6 @@
 from twisted.web import http
 
 
-DEFAULT_HEADER_CONTENT_TYPE = u'text/plain; charset=utf-8'
-
-
 class Response(object):
     """ Base class for all response types
     """
@@ -25,6 +22,15 @@ class Response(object):
         self.code = code
         self.subject = subject
         self.headers = headers
+
+    def _get_default_header(self, url=None):
+        headers = {
+            'content-type': 'text/plain; charset=utf-8'
+        }
+        if url is not None:
+            headers.update({'url': url})
+
+        return headers
 
 
 class Ok(Response):
@@ -89,10 +95,7 @@ class MovedPermanently(Response):
 
     def __init__(self, url, subject='', headers={}):
         if len(headers) == 0:
-            headers = {
-                'content-type': DEFAULT_HEADER_CONTENT_TYPE,
-                'location': url
-            }
+            headers = self._get_default_header(url)
 
         super(MovedPermanently, self).__init__(
             http.MOVED_PERMANENTLY, subject, headers
@@ -105,10 +108,7 @@ class Found(Response):
 
     def __init__(self, url, subject='', headers={}):
         if len(headers) == 0:
-            headers = {
-                'content-type': DEFAULT_HEADER_CONTENT_TYPE,
-                'location': url
-            }
+            headers = self._get_default_header(url)
 
         super(Found, self).__init__(http.FOUND, subject, headers)
 
@@ -119,10 +119,7 @@ class SeeOther(Response):
 
     def __init__(self, url, subject='', headers={}):
         if len(headers) == 0:
-            headers = {
-                'content-type': DEFAULT_HEADER_CONTENT_TYPE,
-                'location': url
-            }
+            headers = self._get_default_header(url)
 
         super(SeeOther, self).__init__(http.SEE_OTHER, subject, headers)
 
@@ -141,7 +138,7 @@ class InternalServerError(Response):
 
     def __init__(self, subject='500: Internal Server Error', headers={}):
         if len(headers) == 0:
-            headers = {'content-type': DEFAULT_HEADER_CONTENT_TYPE}
+            headers = self._get_default_header()
 
         super(InternalServerError, self).__init__(
             http.INTERNAL_SERVER_ERROR, subject, headers
@@ -157,7 +154,7 @@ class NotImplemented(Response):
             subject = '501: Not Implemented: {}'.format(url)
 
         if len(headers) == 0:
-            headers = {'content-type': DEFAULT_HEADER_CONTENT_TYPE}
+            headers = self._get_default_header(url)
 
         super(NotImplemented, self).__init__(
             http.NOT_IMPLEMENTED, subject, headers
