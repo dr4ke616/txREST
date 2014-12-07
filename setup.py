@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     tests_require=['twisted>=10.2.0', 'routes'],
     install_requires=['twisted>=10.2.0', 'routes'],
-    requires=['twisted(>=10.2.0)'],
+    requires=['twisted(>=10.2.0)', 'routes'],
     zip_safe=False,
     classifiers=[
         'Programming Language :: Python',
