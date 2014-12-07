@@ -6,6 +6,10 @@
 Distutils installer for txREST.
 """
 
+import sys
+if not hasattr(sys, "version_info") or sys.version_info < (2, 7):
+    raise RuntimeError("Mamba requires Python 2.7 or later.")
+
 from setuptools import setup, find_packages
 
 setup(
