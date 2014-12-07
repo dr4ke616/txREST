@@ -5,17 +5,11 @@
 Helper mock classes goes here
 """
 
+from txrest import controller
 
-class MockBaseController(object):
 
-    __parent__ = None
-
-    def get_path(self):
-
-        try:
-            return self.__route__
-        except AttributeError:
-            return ''
+class MockBaseController(controller.BaseController):
+    pass
 
 
 class MockController(MockBaseController):

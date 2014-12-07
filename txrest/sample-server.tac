@@ -1,4 +1,3 @@
-# -*- test-case-name: <INSERT_TEST_MODULE> -*-
 # Copyright (c) 2014 Adam Drakeford <adam.drakeford@gmail.com>
 # See LICENSE for more details
 
