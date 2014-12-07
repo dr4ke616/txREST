@@ -33,6 +33,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 _trial_temp/
+txrest/tests/reports/
 
 # Translations
 *.mo

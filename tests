@@ -1,11 +1,5 @@
-#!/usr/bin/env python
-
-import os
-
-
-def main():
-    os.system('trial txrest')
-
-
-if __name__ == '__main__':
-    main()
+#!/bin/bash
+TESTS=$(find txrest/tests -maxdepth 1 -name 'test_*.py')
+coverage run $(which trial) $TESTS || exit $?
+coverage report --include='txrest/*' --omit='txrest/tests/*'
+coverage html -d txrest/tests/reports --include='txrest/*' --omit='txrest/tests/*'

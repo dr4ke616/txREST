@@ -23,7 +23,7 @@ setup(
     author_email='adam.drakeford@gmail.com',
     license='MIT',
     packages=find_packages(),
-    tests_require=['twisted>=10.2.0', 'routes'],
+    tests_require=['twisted>=10.2.0', 'routes', 'coverage'],
     install_requires=['twisted>=10.2.0', 'routes'],
     requires=['twisted(>=10.2.0)', 'routes'],
     zip_safe=False,
