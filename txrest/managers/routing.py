@@ -94,7 +94,7 @@ class RouteManager(object):
         handler = match.pop('handler')
         return handler, match
 
-     # decorator
+    # decorator
     def route(self, url, method='GET'):
         """Register routes for controllers or full REST resources.
         """
